@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Farmer Vegetable App</title>
+  <link rel="stylesheet" href="p1.css" />
+</head>
+<body>
+
+  <div class="sidenav">
+    <h3>Menu</h3>
+    <ul>
+      <li>Upload Vegetable</li>
+      <li>My Vegetables</li>
+      <li>Orders</li>
+      <li>Messages</li>
+      <li>Account Settings</li>
+      <li>Logout</li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <div class="search">
+        <input type="text" id="searchInput" placeholder="Search by name">
+        <select id="categoryFilter">
+          <option value="">All Categories</option>
+          <option value="Leafy">Leafy</option>
+          <option value="Root">Root</option>
+          <option value="Fruit">Fruit</option>
+          <option value="Flower">Flower</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="title">Available Vegetables</div>
+
+    <div class="scroll-wrapper">
+      <button class="scroll-btn left" onclick="scrollGrid(-1)">&#8592;</button>
+
+      <div class="grid-container" id="gridScroll">
+        <div class="grid" id="grid">
+          
+
+            
+        </div>
+      </div>
+
+      <button class="scroll-btn right" onclick="scrollGrid(1)">&#8594;</button>
+    </div>
+
+    <div class="order-summary">
+      <h3>Placed Order Summary</h3>
+      <ul id="orderList"></ul>
+      <p id="totalCost">Total Cost: ₹0</p>
+      <button onclick="resetOrder()">Reset</button>
+    </div>
+  </div>
+
+  <script src="p1.js"></script>
+</body>
+</html>

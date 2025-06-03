@@ -1,0 +1,26 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.nav-container{
+    background-color: rgb(53, 52, 52);
+    padding: 10px 20;
+}
+.nav-list{
+    display: flex;
+    gap: 20px;
+    list-style: none;
+}
+.nav-list a{
+    text-decoration: none   ;
+    color: white;
+    padding: 8px 12px;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+.nav-list a:hover
+{
+    background-color: rgb(147, 147, 146);
+    border-radius: 4px;
+}

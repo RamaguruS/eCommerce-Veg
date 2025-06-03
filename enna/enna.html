@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Farmer Vegetable App</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      height: 100vh;
+      background-color: #f5f5f5;
+      overflow: hidden;
+    }
+
+    .sidenav {
+      width: 200px;
+      background-color: #00697c;
+      color: white;
+      padding: 20px;
+    }
+
+    .sidenav h3 {
+      margin-bottom: 15px;
+    }
+
+    .sidenav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidenav li {
+      margin: 10px 0;
+      cursor: pointer;
+    }
+
+    .sidenav li:hover {
+      text-decoration: underline;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .header {
+      position: relative;
+      height: 3cm;
+      background-image: url('image/banner.jpg'); 
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 15px 20px;
+    }
+
+    .search {
+      display: flex;
+      gap: 10px;
+      z-index: 2;
+    }
+
+    .search input,
+    .search select {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+    }
+
+    .title {
+      padding: 15px 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #00697c;
+    }
+
+    .scroll-wrapper {
+      position: relative;
+      margin: 0 20px;
+    }
+
+    .grid-container {
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      scroll-behavior: smooth;
+      padding-bottom: 10px;
+    }
+
+    .grid {
+      display: flex;
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .card {
+      background-color: white;
+      border: 1px solid #ccc;
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .veg-img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .scroll-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: none;
+      font-size: 24px;
+      padding: 8px 12px;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.3);
+      border-radius: 50%;
+    }
+
+    .scroll-btn.left {
+      left: -10px;
+    }
+
+    .scroll-btn.right {
+      right: -10px;
+    }
+
+    .scroll-btn:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidenav">
+    <h3>Menu</h3>
+    <ul>
+      <li>Upload Vegetable</li>
+      <li>My Vegetables</li>
+      <li>Orders</li>
+      <li>Messages</li>
+      <li>Account Settings</li>
+      <li>Logout</li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <div class="search">
+        <input type="text" id="searchInput" placeholder="Search by name">
+        <select id="categoryFilter">
+          <option value="">All Categories</option>
+          <option value="Leafy">Leafy</option>
+          <option value="Root">Root</option>
+          <option value="Fruit">Fruit</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="title">Available Vegetables</div>
+
+    <div class="scroll-wrapper">
+      <button class="scroll-btn left" onclick="scrollGrid(-1)">&#8592;</button>
+
+      <div class="grid-container" id="gridScroll">
+        <div class="grid" id="grid">
+          <!-- Cards injected by JS -->
+        </div>
+      </div>
+
+      <button class="scroll-btn right" onclick="scrollGrid(1)">&#8594;</button>
+    </div>
+  </div>
+
+  <script>
+    const grid = document.getElementById("grid");
+
+    const vegetables = [
+      { name: "Tomato", category: "Fruit", image: "image/tomatoo.jpg" },
+      { name: "Carrot", category: "Root", image: "image/carrot.jpg" },
+      { name: "Spinach", category: "Leafy", image: "image/spinach.jpg" },
+      { name: "Onion", category: "Root", image: "image/onion.jpg" },
+      { name: "Capsicum", category: "Fruit", image: "image/caps.jpg" },
+      { name: "Cabbage", category: "Leafy", image: "image/cabbage.jpg" },
+      { name: "Beetroot", category: "Root", image: "image/beetroot.jpg" },
+      { name: "Chilli", category: "Fruit", image: "image/chili.jpg" },
+      { name: "Lettuce", category: "Leafy", image: "image/let.jpg" },
+      { name: "Potato", category: "Root", image: "image/potato.jpg" }
+    ];
+
+    function displayCards(filterText = "", category = "") {
+      grid.innerHTML = "";
+      vegetables
+        .filter(v => 
+          v.name.toLowerCase().includes(filterText.toLowerCase()) &&
+          (category === "" || v.category === category)
+        )
+        .forEach(veg => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <img src="${veg.image}" alt="${veg.name}" class="veg-img" />
+            <h4>${veg.name}</h4>
+            <p>Category: ${veg.category}</p>
+          `;
+          grid.appendChild(card);
+        });
+    }
+
+    function scrollGrid(direction) {
+      const container = document.getElementById("gridScroll");
+      const scrollAmount = 250;
+      container.scrollBy({ left: direction * scrollAmount, behavior: "smooth" });
+    }
+
+    document.getElementById("searchInput").addEventListener("input", e => {
+      const text = e.target.value;
+      const category = document.getElementById("categoryFilter").value;
+      displayCards(text, category);
+    });
+
+    document.getElementById("categoryFilter").addEventListener("change", e => {
+      const category = e.target.value;
+      const text = document.getElementById("searchInput").value;
+      displayCards(text, category);
+    });
+
+    // Initial load
+    displayCards();
+  </script>
+
+</body>
+</html>
